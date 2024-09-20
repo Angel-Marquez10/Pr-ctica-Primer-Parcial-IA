@@ -1,0 +1,162 @@
+"""""
+Practica 2: Programa para gestionar un inventario de productos
+ Temas implementados: 
+ -Listas
+ -Tuplas
+ -len()
+ -append()
+ -pop()
+ -so
+ -rt()
+"""
+# Inicializamos una lista con 5 productos establecidos: (nombre, cantidad, precio)
+inventario = [
+   ("Coca Cola", 20, 18),
+    ("Leche", 15, 34),
+    ("Chetos", 10, 16),
+    ("Cerveza", 50, 22),
+    ("Chocorroles", 16, 25)
+
+]
+
+# Variable para almacenar la tupla del inventario
+tupla_inventario = None  #la variable inicialmente no tiene valor o es 0 es para controlar el inventario si esta en lista o tupla
+
+# Función para mostrar el inventario
+def mostrar_inventario():
+    """Muestra los productos en el inventario."""
+    print("\nInventario de Productos:")  
+    # Recorremos la lista de inventario e imprimimos cada producto
+    for i, (producto, cantidad, precio) in enumerate(inventario):
+        print(f"{i + 1}. {producto} - Cantidad: {cantidad}, Precio: ${precio:.2f}")
+    print(f"Total de productos: {len(inventario)}")  # Muestra la cantidad total de productos
+
+# Función para agregar un producto
+def agregar_producto():
+    """Agrega un nuevo producto al inventario."""
+    nombre = input("Ingresa el nombre del producto: ")  # Solicita el nombre del producto
+    cantidad = int(input("Ingresa la cantidad del producto: "))  # Solicita la cantidad
+    precio = float(input("Ingresa el precio del producto: "))  # Solicita el precio
+    inventario.append((nombre, cantidad, precio))  # Agrega el producto a la lista
+    print(f"Producto '{nombre}' agregado al inventario.")  # Confirma la adición
+
+# Función para eliminar un producto
+def eliminar_producto():
+    """Elimina un producto del inventario."""
+    mostrar_inventario()  # Muestra el inventario antes de eliminar
+    index = int(input("Selecciona el número del producto a eliminar: ")) - 1  # Solicita el índice del producto
+    # Verifica que el índice esté dentro de los límites válidos
+    if 0 <= index < len(inventario):
+        eliminado = inventario.pop(index)  # Elimina el producto
+        print(f"Producto '{eliminado[0]}' eliminado del inventario.")  # Confirma la eliminación
+    else:
+        print("Número de producto inválido.")  # Mensaje de error si el índice es inválido
+
+# Función para modificar un producto
+def modificar_producto():
+    """Modifica la cantidad o precio de un producto existente."""
+    global tupla_inventario  # Permite modificar la variable global
+    if tupla_inventario is not None:  # Verifica si el inventario está en forma de tupla
+        print("No se pueden modificar los datos porque el inventario está en forma de tupla.")
+        return  # Sale de la función si el inventario está en tupla
+    
+    mostrar_inventario()  # Muestra el inventario
+    index = int(input("Selecciona el número del producto a modificar: ")) - 1  # Solicita el índice
+    # Verifica que el índice esté dentro de los límites válidos
+    if 0 <= index < len(inventario):
+        nombre, cantidad, precio = inventario[index]  # Obtiene los datos del producto
+        print(f"Producto seleccionado: {nombre} - Cantidad: {cantidad}, Precio: ${precio:.2f}")
+        
+        nueva_cantidad = input("Ingresa la nueva cantidad (o presiona Enter para mantenerla): ")  # Solicita nueva cantidad
+        nuevo_precio = input("Ingresa el nuevo precio (o presiona Enter para mantenerlo): ")  # Solicita nuevo precio
+        
+        # Mantiene los valores originales si el usuario presiona Enter
+        if nueva_cantidad:
+            cantidad = int(nueva_cantidad)  # Actualiza la cantidad si se proporciona un nuevo valor
+        if nuevo_precio:
+            precio = float(nuevo_precio)  # Actualiza el precio si se proporciona un nuevo valor
+        
+        inventario[index] = (nombre, cantidad, precio)  # Actualiza el producto en la lista
+        print(f"Producto '{nombre}' modificado.")  # Confirma la modificación
+    else:
+        print("Número de producto inválido.")  # Mensaje de error si el índice es inválido
+
+# Función para ordenar los productos
+def ordenar_inventario():
+    """Ordena el inventario alfabéticamente por nombre del producto."""
+    inventario.sort(key=lambda x: x[0])  # Ordena la lista por el primer elemento de la tupla (nombre)
+    print("Inventario ordenado alfabéticamente.")  # Confirma que se ha ordenado
+
+# Función para convertir la lista en tupla
+def convertir_a_tupla():
+    """Convierte el inventario de lista a tupla."""
+    global tupla_inventario  # Permite modificar la variable global
+    tupla_inventario = tuple(inventario)  # Convierte la lista a tupla
+    print("Inventario como tupla:", tupla_inventario)  # Muestra la tupla resultante
+
+# Función para convertir tupla a lista
+def convertir_a_lista():
+    """Convierte el inventario de tupla a lista."""
+    global tupla_inventario  # Permite modificar la variable global
+    if tupla_inventario is None:  # Verifica si el inventario ya está en forma de lista
+        print("El inventario ya está en forma de lista.")
+        return  # Sale de la función si ya es una lista
+    global inventario  # Permite modificar la variable global inventario
+    inventario = list(tupla_inventario)  # Convierte la tupla a lista
+    tupla_inventario = None  # Restablece la tupla
+    print("Tupla convertida a lista. Ahora puedes modificar los productos.")  # Confirma la conversión
+
+# Menú principal
+def menu():
+    """Muestra el menú principal y gestiona las opciones del usuario."""
+    print("Bienvenido al sistema de gestión de inventario.")  # Mensaje de bienvenida
+    print("Este programa permite gestionar productos, incluyendo agregar, eliminar, modificar y ordenar productos.")
+    print("Se implementan temas de listas y tuplas en Python.")  # Explicación de los temas
+
+    while True:  # Bucle infinito para mostrar el menú de opciones 
+        print("\n1. Mostrar inventario")  
+        print("2. Agregar producto") 
+        print("3. Eliminar producto")  
+        print("4. Modificar producto")  
+        print("5. Ordenar inventario")  
+        print("6. Convertir a tupla")  
+        print("7. Convertir a lista")  
+        print("8. Salir")  
+        
+        opcion = input("Selecciona una opción: ")  # Solicita la opción al usuario
+        
+        # Llama a la función correspondiente según la opción seleccionada
+        if opcion == '1':
+            mostrar_inventario()
+        elif opcion == '2':
+            agregar_producto()
+        elif opcion == '3':
+            eliminar_producto()
+        elif opcion == '4':
+            modificar_producto()
+        elif opcion == '5':
+            ordenar_inventario()
+        elif opcion == '6':
+            convertir_a_tupla()
+        elif opcion == '7':
+            convertir_a_lista()
+        elif opcion == '8':
+            print("Saliendo del programa. ¡Hasta luego!")  # Mensaje de despedida
+            break  # Sale del bucle y finaliza el programa
+        else:
+            print("Opción inválida. Intenta nuevamente.")  # Mensaje de error si la opción es inválida
+
+# Llamar a la función del menú para iniciar el programa
+menu()
+
+
+
+
+
+
+
+
+
+
+
+

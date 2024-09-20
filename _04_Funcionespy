@@ -1,0 +1,107 @@
+"""
+Práctica 4: Gestión de Pedidos en un Restaurante
+
+En esta práctica se implementan los siguientes temas:
+1. Funciones
+2. Crear y llamar funciones con argumentos
+3. *args - Argumentos arbitrarios
+4. **kwargs - Diccionarios arbitrarios
+5. Funciones lambda
+
+Descripción de la práctica:
+Este programa permite al usuario gestionar pedidos en un restaurante de manera interactiva.
+El usuario puede agregar platos al pedido, ver un resumen del pedido con los precios, 
+calcular el total, aplicar un descuento, calcular el impuesto, y finalizar el pedido.
+Las funcionalidades están organizadas en funciones para una mejor estructura y comprensión del código.
+"""
+
+# Función para mostrar la bienvenida y explicación inicial
+def mostrar_bienvenida():
+    """Muestra un mensaje de bienvenida y explica los temas de la práctica."""
+    print("¡Bienvenido a la Gestión de Pedidos en el Restaurante!")
+    print("En esta práctica, podrás gestionar un pedido, agregar platos, aplicar descuentos, y más.")
+    print("Se implementan temas como funciones, *args, **kwargs, y funciones lambda.")
+    print("¡Comencemos!\n")
+
+# Función para agregar un plato al pedido
+def agregar_pedido(pedido):
+    """Solicita al usuario que agregue un plato y su precio al pedido."""
+    plato = input("Ingrese el nombre del plato: ")  # Solicita el nombre del plato
+    precio = float(input(f"Ingrese el precio de '{plato}': "))  # Solicita el precio del plato
+    pedido.append((plato, precio))  # Añade el plato y su precio a la lista de pedidos
+    print(f"Plato '{plato}' agregado con un precio de ${precio:.2f}.\n")  # Confirma que el plato se agregó
+
+# Función para calcular el total del pedido
+def calcular_total(*precios):
+    """Calcula el costo total de los precios proporcionados."""
+    return sum(precios)  # Retorna la suma de todos los precios
+
+# Función que aplica un descuento al total del pedido
+def aplicar_descuento(total, **kwargs):
+    """Aplica un descuento al total basado en las condiciones proporcionadas."""
+    descuento = kwargs.get('descuento', 0)  # Obtiene el descuento, si no hay, usa 0
+    if descuento:
+        print(f"Se aplicará un descuento del {descuento}%.")  # Informa del descuento
+        total -= total * (descuento / 100)  # Aplica el descuento
+    return total  # Retorna el total con descuento
+
+# Función lambda para calcular el impuesto sobre el total
+calcular_impuesto = lambda total, tasa: total * (tasa / 100)  # Calcula el impuesto basado en la tasa
+
+# Función para generar un resumen del pedido
+def generar_resumen(pedido, total):
+    """Genera y muestra un resumen del pedido."""
+    print("\n--- Resumen del Pedido ---")
+    for i, (plato, precio) in enumerate(pedido):
+        print(f"{i+1}. {plato} - ${precio:.2f}")  # Muestra cada plato y su precio
+    print(f"Total a pagar (sin impuesto): ${total:.2f}\n")  # Muestra el total antes del impuesto
+
+# Función principal para ejecutar el programa de gestión de pedidos
+def gestionar_pedidos():
+    """Función principal que gestiona los pedidos en el restaurante."""
+    pedido = []  # Lista para almacenar los platos y sus precios
+
+    mostrar_bienvenida()  # Muestra la bienvenida y explicación inicial
+
+    while True:  # Ciclo principal del programa
+        print("Menú de opciones:")
+        print("1. Agregar plato")
+        print("2. Ver resumen del pedido")
+        print("3. Finalizar pedido")
+        opcion = input("Seleccione una opción: ")  # Solicita al usuario que elija una opción
+
+        if opcion == '1':
+            agregar_pedido(pedido)  # Llama a la función para agregar un plato
+        elif opcion == '2':
+            if not pedido:
+                print("El pedido está vacío.\n")  # Informa si no hay platos en el pedido
+            else:
+                # Calcula el total del pedido usando *args para pasar los precios
+                total = calcular_total(*(precio for _, precio in pedido))
+
+                # Pregunta al usuario si desea aplicar un descuento
+                aplicar_desc = input("¿Desea aplicar un descuento? (s/n): ").lower()
+                if aplicar_desc == 's':
+                    descuento = float(input("Ingrese el porcentaje de descuento: "))
+                    total_con_descuento = aplicar_descuento(total, descuento=descuento)
+                else:
+                    total_con_descuento = total
+
+                # Calcula el impuesto
+                impuesto = calcular_impuesto(total_con_descuento, tasa=8)
+
+                # Suma el impuesto al total con descuento
+                total_final = total_con_descuento + impuesto
+
+                # Genera y muestra el resumen del pedido
+                generar_resumen(pedido, total_final)
+                print(f"Impuesto (8%): ${impuesto:.2f}")
+                print(f"Total a pagar (con impuesto): ${total_final:.2f}\n")
+        elif opcion == '3':
+            print("Finalizando el pedido...")  # Mensaje de finalización
+            break  # Sale del ciclo y finaliza el programa
+        else:
+            print("Opción no válida, por favor intente de nuevo.\n")  # Mensaje de error si la opción no es válida
+
+# Ejecuta el programa de gestión de pedidos
+gestionar_pedidos()
